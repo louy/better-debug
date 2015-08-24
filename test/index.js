@@ -65,4 +65,24 @@ describe('better-debug', function() {
     instance.warn(err);
     expect(warn).to.be.calledWith(err);
   });
+
+  describe('#ifError', function() {
+    it('shouldn\'t do anything', function() {
+      var error = sinon.spy();
+      debug.on('error', error);
+
+      instance.ifError(null);
+
+      expect(error).to.not.be.called;
+    });
+    it('should output error', function() {
+      var error = sinon.spy();
+      debug.on('error', error);
+
+      var err = new Error('test');
+      instance.ifError(err);
+
+      expect(error).to.be.calledWith(err);
+    });
+  });
 });
