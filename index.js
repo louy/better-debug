@@ -32,13 +32,17 @@ function errorify(err) {
 module.exports = function(domain) {
 
   var log   = (function(fn) {
-    fn.apply(null, arguments);
-    ee.emit.apply(ee, ['log'].concat(arguments));
+    return function() {
+      fn.apply(null, arguments);
+      ee.emit.apply(ee, ['log'].concat(arguments));
+    };
   })(debug(['app', domain, 'log'].join(':')));
 
   var info  = (function(fn) {
-    fn.apply(null, arguments);
-    ee.emit.apply(ee, ['info'].concat(arguments));
+    return function() {
+      fn.apply(null, arguments);
+      ee.emit.apply(ee, ['info'].concat(arguments));
+    };
   })(debug(['app', domain, 'info'].join(':')));
 
   var error = function() {
