@@ -1,4 +1,8 @@
+var debug = require('debug');
+var util = require('util'),
+    extend = util._extend;
 var colors = require('colors');
+var EventEmitter = require('events').EventEmitter;
 
 colors.setTheme({
   data: 'grey',
@@ -9,10 +13,7 @@ colors.setTheme({
   error: 'red'
 });
 
-var debug = require('debug');
-var util = require('util'),
-    extend = util._extend;
-
+var ee = new EventEmitter();
 
 function errorify(err) {
   err = typeof err === 'object' ? err : new Error(err);
@@ -30,19 +31,28 @@ function errorify(err) {
 
 module.exports = function(domain) {
 
-  var log   = debug(['app', domain, 'log'].join(':'));
-  var info  = debug(['app', domain, 'info'].join(':'));
+  var log   = (function(fn) {
+    fn.apply(null, arguments);
+    ee.emit.apply(ee, ['log'].concat(arguments));
+  })(debug(['app', domain, 'log'].join(':')));
+
+  var info  = (function(fn) {
+    fn.apply(null, arguments);
+    ee.emit.apply(ee, ['info'].concat(arguments));
+  })(debug(['app', domain, 'info'].join(':')));
 
   var error = function() {
     var err = errorify.apply(this, arguments);
     err.domain = domain;
     console.error('%s'.error + '\n%s'.data, util.inspect(err), err.stack);
+    ee.emit('error', err);
   };
 
   var warn = function() {
     var err = errorify.apply(this, arguments);
     err.domain = domain;
     console.warn('%s'.warn + '\n%s'.data, util.inspect(err), err.stack);
+    ee.emit('warn', err);
   };
 
   return {
@@ -60,3 +70,9 @@ module.exports = function(domain) {
   };
 };
 
+module.exports.addListener = ee.addListener.bind(ee);
+module.exports.on = ee.on.bind(ee);
+module.exports.once = ee.once.bind(ee);
+module.exports.removeListener = ee.removeListener.bind(ee);
+module.exports.removeAllListeners = ee.removeAllListeners.bind(ee);
+module.exports.listeners = ee.listeners.bind(ee);
