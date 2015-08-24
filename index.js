@@ -39,11 +39,13 @@ module.exports = function(domain) {
 
   var error = function() {
     var err = errorify.apply(this, arguments);
+    err.domain = domain;
     console.error('%s'.error + '\n%s'.data, util.inspect(err), err.stack);
   };
 
   var warn = function() {
     var err = errorify.apply(this, arguments);
+    err.domain = domain;
     console.warn('%s'.warn + '\n%s'.data, util.inspect(err), err.stack);
   };
 
