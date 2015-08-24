@@ -1,0 +1,28 @@
+{
+  "name": "better-debug",
+  "version": "0.1.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/louy/better-debug.git"
+  },
+  "keywords": [
+    "error",
+    "debug",
+    "warning"
+  ],
+  "author": "Louay Alakkad <louay@alakkad.me>",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/louy/better-debug/issues"
+  },
+  "homepage": "https://github.com/louy/better-debug#readme",
+  "description": "",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "debug": "^2.2.0"
+  }
+}
