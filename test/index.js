@@ -41,13 +41,10 @@ describe('better-debug', function() {
   });
 
   it('should use console.error', function() {
-    // `console.error` is causing a throw for some reason.
-    expect(function() {
-      var err = new Error('test');
+    var err = new Error('test');
 
-      instance.error(err);
-      expect(console.error).to.be.calledOnce;
-    }).to.throw(Error);
+    instance.error(err);
+    expect(console.error).to.be.calledOnce;
   });
 
   it('should emit', function() {

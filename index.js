@@ -49,7 +49,9 @@ module.exports = function(domain) {
     var err = errorify.apply(this, arguments);
     err.domain = domain;
     console.error('%s'.error + '\n%s'.data, util.inspect(err), err.stack);
-    ee.emit('error', err);
+    try {
+      ee.emit('error', err);
+    } catch(e) {}
   };
 
   var warn = function() {
