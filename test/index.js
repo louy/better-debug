@@ -1,3 +1,5 @@
+/* jshint mocha: true, expr: true */
+
 var chai = require('chai'),
     expect = chai.expect,
     sinonChai = require('sinon-chai'),
@@ -59,7 +61,7 @@ describe('better-debug', function() {
     instance.error(err);
     expect(error).to.be.calledWith(err);
 
-    instance.warn(err);
+    instance2.warn(err);
     expect(warn).to.be.calledWith(err);
   });
 
