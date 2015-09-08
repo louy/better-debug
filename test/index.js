@@ -11,9 +11,15 @@ var chai = require('chai'),
 chai.use(sinonChai);
 
 describe('better-debug', function() {
-  var instance1 = debug('domain'),
-      instance2 = debug('domain2'),
-      instance3 = debug('some-domain');
+  var instance1,
+      instance2,
+      instance3;
+
+  before(function() {
+    instance1 = debug('domain'),
+    instance2 = debug('domain2'),
+    instance3 = debug('some-domain');
+  });
 
   beforeEach(function() {
     sinon.spy(console, 'log');
@@ -73,25 +79,19 @@ describe('better-debug', function() {
     expect(warn).to.be.calledOnce;
   });
 
-  describe('#ifError', function() {
-    it('shouldn\'t do anything', function() {
-      var error = sinon.spy();
-      debug.on('error', error);
+  it('shouldn\'t do anything when first variable is empty', function() {
+    var spy = sinon.spy();
+    debug.on('log', spy);
+    debug.on('info', spy);
+    debug.on('warn', spy);
+    debug.on('error', spy);
 
-      instance1.ifError(null);
+    instance1.log(null);
+    instance1.info(null);
+    instance1.warn(null);
+    instance1.error(null);
 
-      expect(error).to.not.be.calledOnce;
-    });
-
-    it('should output error', function() {
-      var error = sinon.spy();
-      debug.on('error', error);
-
-      var err = new Error('test');
-      instance1.ifError(err);
-
-      expect(error).to.be.calledOnce;
-    });
+    expect(spy).to.not.be.called;
   });
 
   it('should respect DEBUG variable', function() {
