@@ -18,13 +18,12 @@ var ee = new EventEmitter();
 
 function errorify(err) {
   err = typeof err === 'object' ? err : new Error(err);
-  err.meta = err.meta || {};
 
   [].forEach.call(arguments, function(argument, index) {
     if (index === 0) { return; }
 
     if (typeof argument === 'object') {
-      extend(err.meta, argument);
+      extend(err, argument);
     }
   });
 
