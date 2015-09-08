@@ -19,8 +19,8 @@ With npm...
 
     debug.log('Test'); // app:main:log Test
     debug.info('Test %d', 0); // app:main:info Test 0
-    debug.warn(new Error('Test')); // { [Error: Test] domain: 'main' }
-    debug.error(new Error('Test'), { method: 'testMethod', 'location': 'index.js', }); // { [Error: Test] domain: 'main', meta: { method: 'testMethod', location: 'index.js' } }
+    debug.warn(new Error('Test')); // app:main:warn { [Error: Test] }
+    debug.error(new Error('Test'), { method: 'testMethod', 'location': 'index.js', }); // app:main:error { [Error: Test] meta: { method: 'testMethod', location: 'index.js' } }
 
-You can filter info/log calls with the env variable `DEBUG`.
+You can filter everything with the env variable `DEBUG`.
 For example, `DEBUG=app:*:info node .` will only output `debug.info` calls.
