@@ -7,7 +7,6 @@ test:
     - npm test
     - npm run coverage
     - cat ./coverage/coverage.json | ./node_modules/codecov.io/bin/codecov.io.js
-  post:
     - cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage
 
 dependencies:
