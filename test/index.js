@@ -105,4 +105,14 @@ describe('better-debug', function() {
     expect(console.warn).to.be.calledOnce;
     expect(console.error).to.not.be.calledOnce;
   });
+
+  it('extends error object', function() {
+    var err = new Error('test');
+
+    instance1.error(err, {pass: true});
+
+    expect(console.error).to.be.calledOnce;
+
+    expect(err).to.have.property('pass').and.to.equal(true);
+  });
 });
