@@ -10,7 +10,7 @@ colors.setTheme({
   help: 'cyan',
   warn: 'yellow',
   debug: 'blue',
-  error: 'red'
+  error: 'red',
 });
 
 var ee = new EventEmitter();
@@ -20,8 +20,9 @@ function errorify(err) {
   err.meta = err.meta || {};
 
   [].forEach.call(arguments, function(argument, index) {
-    if ( index === 0 ) return;
-    if( typeof argument === 'object' ) {
+    if (index === 0) { return; }
+
+    if (typeof argument === 'object') {
       extend(err.meta, argument);
     }
   });
@@ -51,7 +52,7 @@ module.exports = function(domain) {
     console.error('%s'.error + '\n%s'.data, util.inspect(err), err.stack);
     try {
       ee.emit('error', err);
-    } catch(e) {}
+    } catch (e) {}
   };
 
   var warn = function() {
@@ -69,7 +70,7 @@ module.exports = function(domain) {
 
     // Use this function if you don't want to pass the error upwards.
     ifError: function(err) {
-      if ( err ) {
+      if (err) {
         return error.apply(this, arguments);
       }
     },
