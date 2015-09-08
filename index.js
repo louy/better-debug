@@ -5,11 +5,12 @@ var colors = require('colors');
 var EventEmitter = require('events').EventEmitter;
 
 colors.setTheme({
-  data: 'grey',
-  info: 'green',
   help: 'cyan',
+  data: 'grey',
+
+  log: 'blue',
+  info: 'green',
   warn: 'yellow',
-  debug: 'blue',
   error: 'red',
 });
 
@@ -32,49 +33,38 @@ function errorify(err) {
 
 module.exports = function(domain) {
 
-  var log   = (function(fn) {
-    return function() {
-      fn.apply(null, arguments);
-      ee.emit.apply(ee, ['log'].concat(arguments));
-    };
-  })(debug(['app', domain, 'log'].join(':')));
+  var r = {};
+  var levels = ['log', 'info', 'warn', 'error'];
 
-  var info  = (function(fn) {
-    return function() {
-      fn.apply(null, arguments);
-      ee.emit.apply(ee, ['info'].concat(arguments));
-    };
-  })(debug(['app', domain, 'info'].join(':')));
+  levels.forEach(function(level) {
+    var d = debug(['app', domain, level].join(':'));
 
-  var error = function() {
-    var err = errorify.apply(this, arguments);
-    err.domain = domain;
-    console.error('%s'.error + '\n%s'.data, util.inspect(err), err.stack);
-    try {
-      ee.emit('error', err);
-    } catch (e) {}
-  };
+    if ('undefined' !== typeof console[level]) {
+      d.log = function() {
+        return console[level].apply(console, arguments);
+      };
+    }
 
-  var warn = function() {
-    var err = errorify.apply(this, arguments);
-    err.domain = domain;
-    console.warn('%s'.warn + '\n%s'.data, util.inspect(err), err.stack);
-    ee.emit('warn', err);
-  };
-
-  return {
-    log: log,
-    info: info,
-    warn: warn,
-    error: error,
-
-    // Use this function if you don't want to pass the error upwards.
-    ifError: function(err) {
-      if (err) {
-        return error.apply(this, arguments);
+    var fn = function(msg) {
+      if (!msg) { return; } // Skip empty messages.
+      if (msg instanceof Error) {
+        var err = errorify.apply(this, arguments);
+        d.apply(null, [util.inspect(err)[level], err.stack.data]);
+      } else {
+        d.apply(null, arguments);
       }
-    },
-  };
+
+      try {
+        ee.emit(level, arguments);
+      } catch (e) {}
+    };
+
+    r[level] = fn;
+  });
+
+  r.ifError = r.error; // Backwards compatibility.
+
+  return r;
 };
 
 module.exports.addListener = ee.addListener.bind(ee);
