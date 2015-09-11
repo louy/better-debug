@@ -30,13 +30,18 @@ function errorify(err) {
   return err;
 }
 
-module.exports = function(domain) {
+module.exports = function(domain, opts) {
 
   var r = {};
   var levels = ['log', 'info', 'warn', 'error'];
 
+  var prefix = 'app:';
+  if (opts && opts.app === false) {
+    prefix = '';
+  }
+
   levels.forEach(function(level) {
-    var d = debug(['app', domain, level].join(':'));
+    var d = debug(prefix+[domain, level].join(':'));
 
     if ('undefined' !== typeof console[level]) {
       d.log = function() {

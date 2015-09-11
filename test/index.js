@@ -115,4 +115,6 @@ describe('better-debug', function() {
 
     expect(err).to.have.property('pass').and.to.equal(true);
   });
+
+  it('should respect `app` option');
 });
