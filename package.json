@@ -21,7 +21,7 @@
     "url": "https://github.com/louy/better-debug/issues"
   },
   "homepage": "https://github.com/louy/better-debug#readme",
-  "description": "",
+  "description": "A better alternative to debug module",
   "dependencies": {
     "colors": "^1.1.2",
     "debug": "^2.2.0"
@@ -35,5 +35,8 @@
     "mocha-junit-reporter": "^1.6.1",
     "sinon": "^1.16.1",
     "sinon-chai": "^2.8.0"
+  },
+  "directories": {
+    "test": "test"
   }
 }
