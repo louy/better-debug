@@ -1,6 +1,6 @@
 /* jshint mocha: true, expr: true */
 
-process.env.DEBUG = 'app:domain*';
+process.env.DEBUG = 'app:domain*,domain2:*';
 
 var chai = require('chai'),
     expect = chai.expect,
@@ -13,12 +13,16 @@ chai.use(sinonChai);
 describe('better-debug', function() {
   var instance1,
       instance2,
-      instance3;
+      instance3,
+      instance4,
+      instance5;
 
   before(function() {
     instance1 = debug('domain'),
     instance2 = debug('domain2'),
     instance3 = debug('some-domain');
+    instance4 = debug('domain1', {app:false});
+    instance5 = debug('domain2', {app:false});
   });
 
   beforeEach(function() {
@@ -116,5 +120,11 @@ describe('better-debug', function() {
     expect(err).to.have.property('pass').and.to.equal(true);
   });
 
-  it('should respect `app` option');
+  it('should respect `app` option', function() {
+    instance4.log('test');
+    expect(console.log).not.to.be.called;
+
+    instance5.log('test');
+    expect(console.log).to.be.calledOnce;
+  });
 });
