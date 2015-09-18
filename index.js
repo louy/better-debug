@@ -1,18 +1,17 @@
 var debug = require('debug');
 var util = require('util'),
     extend = util._extend;
-var colors = require('colors');
 var EventEmitter = require('events').EventEmitter;
 
-colors.setTheme({
-  help: 'cyan',
-  data: 'grey',
+var chalk = require('chalk');
+var colors = {
+  data: chalk.gray,
 
-  log: 'blue',
-  info: 'green',
-  warn: 'yellow',
-  error: 'red',
-});
+  log: chalk.bold.blue,
+  info: chalk.bold.green,
+  warn: chalk.bold.yellow,
+  error: chalk.bold.red,
+};
 
 var ee = new EventEmitter();
 
@@ -53,7 +52,7 @@ module.exports = function(domain, opts) {
       if (!msg) { return; } // Skip empty messages.
       if (msg instanceof Error) {
         var err = errorify.apply(this, arguments);
-        d.apply(null, [util.inspect(err)[level], err.stack.data]);
+        d.apply(null, [colors[level](util.inspect(err)), colors.data(err.stack)]);
       } else {
         d.apply(null, arguments);
       }

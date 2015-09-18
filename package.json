@@ -23,7 +23,7 @@
   "homepage": "https://github.com/louy/better-debug#readme",
   "description": "A better alternative to debug module",
   "dependencies": {
-    "colors": "^1.1.2",
+    "chalk": "^1.1.1",
     "debug": "^2.2.0"
   },
   "devDependencies": {
