@@ -5,7 +5,12 @@ var EventEmitter = require('events').EventEmitter;
 
 var chalk = require('chalk');
 var colors = {
-  data: chalk.gray,
+  stack: function(string) {
+    string.split('\n').map(function(line) {
+      return (line.indexOf('/node_modules/') > -1 || line.indexOf('(native)') > -1) ?
+              chalk.gray(line) : chalk.white(line);
+    }).join('\n');
+  },
 
   log: chalk.bold.blue,
   info: chalk.bold.green,
@@ -40,7 +45,7 @@ module.exports = function(domain, opts) {
   }
 
   levels.forEach(function(level) {
-    var d = debug(prefix+[domain, level].join(':'));
+    var d = debug(prefix + [domain, level].join(':'));
 
     if ('undefined' !== typeof console[level]) {
       d.log = function() {
@@ -52,7 +57,10 @@ module.exports = function(domain, opts) {
       if (!msg) { return; } // Skip empty messages.
       if (msg instanceof Error) {
         var err = errorify.apply(this, arguments);
-        d.apply(null, [colors[level](util.inspect(err)), colors.data(err.stack)]);
+        d.apply(null, [
+          colors[level](util.inspect(err)),
+          colors.stack(err.stack),
+        ]);
       } else {
         d.apply(null, arguments);
       }
